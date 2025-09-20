@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme inline {
+  animation: var(--animate-pulse);
+}
+
+@keyframes pluse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+}
