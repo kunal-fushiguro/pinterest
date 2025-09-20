@@ -10,7 +10,7 @@ const Button = ({ children, className }: Props) => {
   return (
     <div
       className={cn(
-        "h-10 md:h-12 bg-red-600 flex justify-center items-center text-white px-4 text-md font-bold rounded-xl hover:bg-red-700 hover:text-white/80",
+        " bg-red-600 flex justify-center items-center text-white px-4 py-1.5 text-md font-bold rounded-xl hover:bg-red-700 hover:text-white/80",
         className,
       )}
     >

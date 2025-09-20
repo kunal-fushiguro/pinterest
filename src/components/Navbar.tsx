@@ -3,11 +3,11 @@ import Button from "../components/Button";
 
 const Navbar = () => {
   return (
-    <nav className="w-full h-14 sm:h-16 flex justify-between sm:justify-start items-center p-2 gap-3 sticky top-0 bg-neutral-50">
+    <nav className="w-full h-12 flex justify-between sm:justify-start items-center p-2 gap-3 sticky top-0 bg-neutral-50">
       {/* title and logo */}
       <Link to={"/"}>
-        <div className="h-14 sm:h-16 flex justify-center items-center">
-          <img src="/logo.png" alt="logo" className="h-14 sm:h-16" />
+        <div className="h-12 flex justify-center items-center">
+          <img src="/logo.png" alt="logo" className="h-12 " />
         </div>
       </Link>
       {/*  search based on the tags */}
