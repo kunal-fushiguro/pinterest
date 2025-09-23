@@ -25,3 +25,14 @@ export async function getCurrentUser() {
     return null;
   }
 }
+
+export async function loginWithGoogle() {
+  try {
+    const data = await authClient.signIn.social({
+      provider: "google",
+    });
+    return true;
+  } catch (error) {
+    console.error(error);
+  }
+}

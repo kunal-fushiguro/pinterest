@@ -1,6 +1,7 @@
 "use client";
 import InputBox from "@/components/auth/InputBox";
 import { authClient } from "@/lib/auth-client";
+import { loginWithGoogle } from "@/services/auth";
 import { validateLoginEmail, validateLoginPassword } from "@/utils/validation";
 import Image from "next/image";
 import Link from "next/link";
@@ -92,15 +93,21 @@ const SignInPage = () => {
           <span className="text-sm font-medium text-neutral-600">OR</span>
           <span className="h-px flex-1 bg-neutral-300"></span>
         </div>
-        {/* <div
-          className="bg-white border border-neutral-300 w-full py-2.5 rounded-lg flex justify-center items-center gap-3 cursor-pointer hover:bg-neutral-50 transition"
+        <div
+          className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-lg border border-neutral-300 bg-white py-2.5 transition hover:bg-neutral-50"
           onClick={loginWithGoogle}
         >
-          <Image src="/google.png" alt="logo" className="h-5" />
-          <span className="font-medium text-sm text-neutral-700">
+          <Image
+            src="/google.png"
+            alt="logo"
+            width={20}
+            height={20}
+            className="h-5"
+          />
+          <span className="text-sm font-medium text-neutral-700">
             Continue with Google
           </span>
-        </div> */}
+        </div>
         <div className="text-sm text-neutral-700">
           Not on Pinterest yet?
           <Link
