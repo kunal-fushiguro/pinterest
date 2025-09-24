@@ -1,5 +1,4 @@
 import { authClient } from "@/lib/auth-client";
-import { BASE_URL } from "@/lib/env";
 
 export async function signOut(): Promise<boolean> {
   try {
