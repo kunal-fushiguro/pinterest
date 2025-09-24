@@ -24,21 +24,21 @@ export const auth = betterAuth({
   hooks: {
     after: createAuthMiddleware(async function (ctx) {
       try {
-        if (ctx.path.startsWith("/sign-up")) {
-          const newSession = ctx.context.newSession;
-          if (newSession) {
-            await connectDb();
-            const user = await Users.findOne({ user: newSession.user.id });
-            if (user) {
-              return;
-            }
-            await Users.create({
-              user: newSession.user.id,
-              uploads: [],
-              collections: [],
-            });
+        // if (ctx.path.startsWith("/sign-up")) {
+        const newSession = ctx.context.newSession;
+        if (newSession) {
+          await connectDb();
+          const user = await Users.findOne({ user: newSession.user.id });
+          if (user) {
+            return;
           }
+          await Users.create({
+            user: newSession.user.id,
+            uploads: [],
+            collections: [],
+          });
         }
+        // }
       } catch (error) {
         console.error(error);
       }

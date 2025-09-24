@@ -1,4 +1,5 @@
 import { authClient } from "@/lib/auth-client";
+import { BASE_URL } from "@/lib/env";
 
 export async function signOut(): Promise<boolean> {
   try {
@@ -28,10 +29,21 @@ export async function getCurrentUser() {
 
 export async function loginWithGoogle() {
   try {
-    const data = await authClient.signIn.social({
+    await authClient.signIn.social({
       provider: "google",
     });
     return true;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getUserData() {
+  try {
+    const response = await fetch("/api/user", { method: "GET" });
+    const data = await response.json();
+
+    console.log(data);
   } catch (error) {
     console.error(error);
   }
