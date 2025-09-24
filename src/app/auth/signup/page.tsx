@@ -9,6 +9,7 @@ import {
 } from "@/utils/validation";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import React, { useState } from "react";
 
 const SignUpPage = () => {
@@ -53,11 +54,16 @@ const SignUpPage = () => {
       });
 
       if (error) {
+        if (error.status === 422) {
+          setIsEmailError(true);
+          setEmailError("Email is Already In Use");
+        }
         console.error(error);
         return;
       }
 
       console.log(data);
+      redirect("/");
     } catch (error) {
       console.error(error);
     }

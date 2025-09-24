@@ -5,6 +5,7 @@ import { loginWithGoogle } from "@/services/auth";
 import { validateLoginEmail, validateLoginPassword } from "@/utils/validation";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import React, { useState } from "react";
 
 const SignInPage = () => {
@@ -42,6 +43,7 @@ const SignInPage = () => {
       }
 
       console.log(data);
+      redirect("/");
     } catch (error) {
       console.error(error);
     }
