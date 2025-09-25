@@ -2,15 +2,22 @@
 
 import InputBox from "@/components/InputBox";
 import { uploadImage } from "@/lib/appwrite";
+import { authClient } from "@/lib/auth-client";
+import { uploadPhoto } from "@/services/photo";
 import {
   validateFile,
   validateTitle,
   validateDescription,
 } from "@/utils/validation";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, { useState, DragEvent } from "react";
 
 const UploadNewPhotoPage = () => {
+  const { data: session } = authClient.useSession();
+  const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [disable, setDisable] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -46,25 +53,30 @@ const UploadNewPhotoPage = () => {
 
     if (!fileValid || !titleValid || !descriptionValid) return;
 
-    const formData = new FormData();
-    if (file) formData.append("file", file);
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("tags", tags);
-
+    setLoading(true);
+    setDisable(true);
     try {
-      //  upload image to appwrite storage
       const ImageUrl = await uploadImage(file);
       if (ImageUrl === null) {
         console.error("Error While Uploading Image");
         return;
       }
-      // store it on db
-      console.log("Uploading photo:", { ImageUrl, title, description, tags });
+      const isPhotoUploaded = await uploadPhoto(
+        title,
+        description,
+        tags.split(","),
+        ImageUrl,
+      );
+
+      if (isPhotoUploaded) {
+        router.push(`/profile/${session?.user.id}`);
+      }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
+      setDisable(false);
     }
-    // TODO: send formData to API
   }
 
   return (
@@ -150,9 +162,14 @@ const UploadNewPhotoPage = () => {
 
           <button
             onClick={handleUpload}
+            disabled={disable}
             className="mt-4 w-full rounded-lg bg-red-500 py-3 font-semibold text-white transition hover:bg-red-600"
           >
-            Upload
+            {loading ? (
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-red-500 border-t-transparent"></div>
+            ) : (
+              "Upload"
+            )}
           </button>
         </div>
       </div>

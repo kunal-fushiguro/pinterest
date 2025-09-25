@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "fra.cloud.appwrite.io/v1/storage/buckets/",
+        hostname: "fra.cloud.appwrite.io",
       },
     ],
   },
