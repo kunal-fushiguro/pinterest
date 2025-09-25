@@ -2,11 +2,25 @@ import { Schema, model, models } from "mongoose";
 
 const userSchema = new Schema(
   {
-    user: {
+    userId: {
       type: Schema.Types.ObjectId,
       ref: "user",
       required: true,
       unique: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,
+    },
+    emailVerified: {
+      type: Boolean,
     },
     uploads: [
       {

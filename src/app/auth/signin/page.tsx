@@ -1,14 +1,15 @@
 "use client";
-import InputBox from "@/components/auth/InputBox";
+import InputBox from "@/components/InputBox";
 import { authClient } from "@/lib/auth-client";
 import { loginWithGoogle } from "@/services/auth";
 import { validateLoginEmail, validateLoginPassword } from "@/utils/validation";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const SignInPage = () => {
+  const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isEmailError, setIsEmailError] = useState<boolean>(false);
@@ -43,7 +44,7 @@ const SignInPage = () => {
       }
 
       console.log(data);
-      redirect("/");
+      router.push("/");
     } catch (error) {
       console.error(error);
     }
@@ -97,7 +98,12 @@ const SignInPage = () => {
         </div>
         <div
           className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-lg border border-neutral-300 bg-white py-2.5 transition hover:bg-neutral-50"
-          onClick={loginWithGoogle}
+          onClick={async () => {
+            const response = await loginWithGoogle();
+            if (response) {
+              router.push("/");
+            }
+          }}
         >
           <Image
             src="/google.png"

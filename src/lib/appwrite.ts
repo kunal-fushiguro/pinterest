@@ -1,32 +1,25 @@
 import { Client, ID, Storage } from "appwrite";
-import {
-  NEXT_PUBLIC_APPWRITE_ENDPOINT,
-  NEXT_PUBLIC_APPWRITE_PROJECT_ID,
-} from "./env";
 
 const client = new Client()
-  .setEndpoint(NEXT_PUBLIC_APPWRITE_ENDPOINT as string)
-  .setProject(NEXT_PUBLIC_APPWRITE_PROJECT_ID as string);
+  .setEndpoint("https://fra.cloud.appwrite.io/v1")
+  .setProject("68d37cb60020b1fc799f");
 
 const storage = new Storage(client);
 const BUCKETID = "68d37ea7003df1fc808e";
 
-export async function uploadImage(file: File): Promise<string | null> {
+export async function uploadImage(file: File | null): Promise<string | null> {
   try {
-    const response = await storage.createFile({
-      bucketId: BUCKETID,
-      fileId: ID.unique(),
-      file: file,
-    });
+    if (!file) {
+      return null;
+    }
 
-    const getFileUrl = await storage.getFileDownload({
-      bucketId: BUCKETID,
-      fileId: response.$id,
-    });
+    const response = await storage.createFile(BUCKETID, ID.unique(), file);
+
+    const getFileUrl = storage.getFileDownload(BUCKETID, response.$id);
 
     return getFileUrl;
   } catch (error) {
-    console.error(error);
+    console.error("Upload error:", error);
     return null;
   }
 }

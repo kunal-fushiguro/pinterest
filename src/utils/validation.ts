@@ -69,3 +69,71 @@ export function validateUsername(
   setErrorMsg("");
   return true;
 }
+
+export function validateFile(
+  file: File | null,
+  setIsError: Dispatch<SetStateAction<boolean>>,
+  setErrorMsg: Dispatch<SetStateAction<string>>,
+) {
+  if (!file) {
+    setIsError(true);
+    setErrorMsg("File is required");
+    return false;
+  }
+  const validTypes = ["image/jpeg", "image/png", "image/webp"];
+  if (!validTypes.includes(file.type)) {
+    setIsError(true);
+    setErrorMsg("Only JPG, PNG, or WEBP images allowed");
+    return false;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    setIsError(true);
+    setErrorMsg("File size must be under 5MB");
+    return false;
+  }
+  setIsError(false);
+  setErrorMsg("");
+  return true;
+}
+
+// Title validation
+export function validateTitle(
+  title: string,
+  setIsError: Dispatch<SetStateAction<boolean>>,
+  setErrorMsg: Dispatch<SetStateAction<string>>,
+) {
+  if (!title) {
+    setIsError(true);
+    setErrorMsg("Title is required");
+    return false;
+  }
+  if (title.length < 3) {
+    setIsError(true);
+    setErrorMsg("Title must be at least 3 characters");
+    return false;
+  }
+  setIsError(false);
+  setErrorMsg("");
+  return true;
+}
+
+// Description validation
+export function validateDescription(
+  description: string,
+  setIsError: Dispatch<SetStateAction<boolean>>,
+  setErrorMsg: Dispatch<SetStateAction<string>>,
+) {
+  if (!description) {
+    setIsError(true);
+    setErrorMsg("Description is required");
+    return false;
+  }
+  if (description.length < 10) {
+    setIsError(true);
+    setErrorMsg("Description must be at least 10 characters");
+    return false;
+  }
+  setIsError(false);
+  setErrorMsg("");
+  return true;
+}

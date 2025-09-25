@@ -1,41 +1,27 @@
-import { auth } from "@/lib/auth";
+import { ApiResponse } from "@/utils/ApiResponse";
 import { connectDb } from "@/lib/db";
 import { Users } from "@/models/user";
-import { headers } from "next/headers";
-import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get("id");
+  if (!userId) {
+    return new ApiResponse(400, "User ID is required").send();
+  }
+
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-
     await connectDb();
-    const findUser = await Users.findOne({ user: session.user.id });
+    const findUser = await Users.findOne({ userId: userId });
 
     if (!findUser) {
-      return NextResponse.json(
-        {
-          msg: "User Not Existed",
-          success: false,
-        },
-        {
-          status: 400,
-        },
-      );
+      return new ApiResponse(400, "User Not Existed").send();
     }
 
-    return NextResponse.json(
-      {
-        msg: "User Fetched Successfully",
-        success: true,
-        data: findUser,
-      },
-      {
-        status: 200,
-      },
-    );
+    return new ApiResponse(200, "User Fetched Successfully", findUser).send();
   } catch (e) {
     console.error(e);
+    if (e instanceof Error) {
+      return new ApiResponse(500, e.message).send();
+    }
   }
 }

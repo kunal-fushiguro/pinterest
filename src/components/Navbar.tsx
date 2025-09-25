@@ -1,31 +1,24 @@
 "use client";
-import { getCurrentUser, signOut } from "@/services/auth";
-import { User } from "@/types";
+
+import { authClient } from "@/lib/auth-client";
+import { signOut } from "@/services/auth";
+import { getUserInitials } from "@/utils/getUserInitials";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import React from "react";
 
 const Navbar = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
 
-  //    sign out
+  // handle sign out
   async function signOutUser() {
     const response = await signOut();
     if (response) {
-      await updateUser();
-      redirect("/");
+      router.replace("/");
     }
   }
-
-  async function updateUser() {
-    const data = await getCurrentUser();
-    setUser(data);
-  }
-
-  useEffect(() => {
-    updateUser();
-  }, []);
 
   return (
     <nav className="sticky top-0 z-50 flex w-full items-center justify-between bg-white px-4 py-2 shadow-sm md:px-6 md:py-2">
@@ -42,20 +35,28 @@ const Navbar = () => {
         </span>
       </Link>
 
-      {user ? (
+      {isPending ? (
+        <span className="text-sm text-gray-500">Loading...</span>
+      ) : session ? (
         <div className="flex items-center justify-center gap-4">
           <Link
-            href={`/profile/${user.user.id}`}
-            className="flex h-[32px] w-[32px] items-center gap-2 rounded-full bg-neutral-700 transition hover:text-red-500"
+            href={`/profile/${session.user.id}`}
+            className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-neutral-700"
           >
-            {/* <Image
-                src={user.avatar}
-                alt={user.name}
+            {session.user.image && (
+              <Image
+                src={session.user?.image}
+                alt={session.user.name}
                 width={32}
                 height={32}
                 className="rounded-full"
-              /> */}
-            {/* <span>{user.name}</span> */}
+              />
+            )}
+            {!session.user.image && (
+              <span className="text-sm font-medium text-white">
+                {getUserInitials(session.user.name)}
+              </span>
+            )}
           </Link>
           <button
             onClick={signOutUser}

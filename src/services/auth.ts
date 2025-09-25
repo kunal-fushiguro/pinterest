@@ -1,4 +1,5 @@
 import { authClient } from "@/lib/auth-client";
+import { ApiGetUserResponse } from "@/types";
 
 export async function signOut(): Promise<boolean> {
   try {
@@ -37,13 +38,16 @@ export async function loginWithGoogle() {
   }
 }
 
-export async function getUserData() {
+export async function getUserData(id: string) {
   try {
-    const response = await fetch("/api/user", { method: "GET" });
-    const data = await response.json();
-
-    console.log(data);
+    const response = await fetch(`/api/user?id=${id}`, { method: "GET" });
+    const data: ApiGetUserResponse = await response.json();
+    if (response.ok) {
+      return data.data;
+    }
+    return false;
   } catch (error) {
     console.error(error);
+    return false;
   }
 }

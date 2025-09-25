@@ -19,3 +19,24 @@ export interface User {
     userAgent?: string | null | undefined;
   };
 }
+
+export interface ApiGetUserResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: UserPageType;
+}
+
+export interface UserPageType {
+  _id: string;
+  userId: string;
+  name: string;
+  email: string;
+  image: string;
+  emailVerified: boolean;
+  uploads: [];
+  collections: [];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}

@@ -4,7 +4,6 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { GOOGLE_CLIENT_ID, GOOGLE_SECERT } from "./env";
 import { createAuthMiddleware } from "better-auth/api";
 import { Users } from "@/models/user";
-import { headers } from "next/headers";
 
 export const auth = betterAuth({
   emailAndPassword: {
@@ -28,12 +27,18 @@ export const auth = betterAuth({
         const newSession = ctx.context.newSession;
         if (newSession) {
           await connectDb();
-          const user = await Users.findOne({ user: newSession.user.id });
+          const user = await Users.findOne({
+            userId: newSession.user.id,
+          });
           if (user) {
             return;
           }
           await Users.create({
-            user: newSession.user.id,
+            userId: newSession.user.id,
+            name: newSession.user.name,
+            email: newSession.user.email,
+            image: newSession.user.image,
+            emailVerified: newSession.user.emailVerified || "",
             uploads: [],
             collections: [],
           });
