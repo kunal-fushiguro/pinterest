@@ -51,12 +51,12 @@ export async function POST(request: Request) {
       ImageUrl: string;
       title: string;
       description: string;
-      tags: string[];
+      tags: string[] | [];
     } = await request.json();
     const { ImageUrl, title, description, tags } = data;
 
     if (!ImageUrl || !title || !description) {
-      return new ApiResponse(400, "All Fields are required");
+      return new ApiResponse(400, "All Fields are required").send();
     }
 
     await connectDb();
@@ -90,6 +90,89 @@ export async function POST(request: Request) {
     console.error(e);
     if (e instanceof Error) {
       return new ApiResponse(500, e.message).send();
+    }
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session) {
+      return new ApiResponse(401, "Unauthorized Access").send();
+    }
+
+    const data: {
+      postId: string;
+      title: string;
+      description: string;
+      tags: string[] | [];
+    } = await request.json();
+    const { postId, title, description, tags } = data;
+
+    if (!postId || !title || !description) {
+      return new ApiResponse(400, "All Fields are required").send();
+    }
+
+    const findPost = await Photo.findById(postId).populate("user");
+
+    if (!findPost) {
+      return new ApiResponse(400, "Photo not found").send();
+    }
+
+    if (session.user.id !== findPost.user.userId) {
+      return new ApiResponse(401, "Unauthorized Access").send();
+    }
+
+    await Photo.findByIdAndUpdate(findPost._id, {
+      title: title,
+      description: description,
+      tags: tags,
+    });
+
+    return new ApiResponse(200, "Photo updated Successfully").send();
+  } catch (err) {
+    if (err instanceof Error) {
+      return new ApiResponse(500, err.message).send();
+    }
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session) {
+      return new ApiResponse(401, "Unauthorized Access").send();
+    }
+
+    const data: { postId: string } = await request.json();
+    const { postId } = data;
+
+    if (!postId) {
+      return new ApiResponse(400, "All Fields are required").send();
+    }
+
+    const findPost = await Photo.findById(postId).populate("user");
+
+    if (!findPost) {
+      return new ApiResponse(400, "Photo not found").send();
+    }
+
+    if (session.user.id !== findPost.user.userId) {
+      return new ApiResponse(401, "Unauthorized Access").send();
+    }
+
+    await Photo.findByIdAndDelete(findPost._id);
+
+    return new ApiResponse(200, "Photo Deleted Successfully").send();
+  } catch (err) {
+    if (err instanceof Error) {
+      return new ApiResponse(500, err.message).send();
     }
   }
 }

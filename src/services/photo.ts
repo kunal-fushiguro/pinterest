@@ -1,4 +1,4 @@
-import { ApiGetPhotoResponse, SinglePhotoType } from "@/types";
+import { ApiGetPhotoResponse } from "@/types";
 
 export async function uploadPhoto(
   title: string,
