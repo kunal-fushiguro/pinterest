@@ -1,7 +1,6 @@
 import { auth } from "@/lib/auth";
 import { connectDb } from "@/lib/db";
-import { Comment } from "@/models/comments";
-import { Photo } from "@/models/photos";
+import { Photo, Comment } from "@/models";
 import { ApiResponse } from "@/utils/ApiResponse";
 import { headers } from "next/headers";
 

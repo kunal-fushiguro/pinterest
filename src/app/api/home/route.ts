@@ -1,5 +1,5 @@
 import { connectDb } from "@/lib/db";
-import { Photo } from "@/models/photos";
+import { Photo } from "@/models";
 import { ApiResponse } from "@/utils/ApiResponse";
 
 export async function GET(request: Request) {

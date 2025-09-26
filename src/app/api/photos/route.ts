@@ -1,9 +1,8 @@
 import { ApiResponse } from "@/utils/ApiResponse";
 import { connectDb } from "@/lib/db";
-import { Users } from "@/models/user";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-import { Photo } from "@/models/photos";
+import { Photo, Users } from "@/models";
 
 //  get single photo
 export async function GET(request: Request) {

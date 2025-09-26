@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/utils/ApiResponse";
 import { connectDb } from "@/lib/db";
-import { Users } from "@/models/user";
+import { Users } from "@/models";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
