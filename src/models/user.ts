@@ -4,7 +4,7 @@ const userSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: "user",
+      ref: "User",
       required: true,
       unique: true,
     },
@@ -25,17 +25,17 @@ const userSchema = new Schema(
     uploads: [
       {
         type: Schema.Types.ObjectId,
-        ref: "photo",
+        ref: "Photo",
       },
     ],
     collections: [
       {
         type: Schema.Types.ObjectId,
-        ref: "collections",
+        ref: "Collection",
       },
     ],
   },
   { timestamps: true },
 );
 
-export const Users = models.users || model("users", userSchema);
+export const Users = models.Users || model("Users", userSchema);

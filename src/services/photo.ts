@@ -1,3 +1,5 @@
+import { ApiGetPhotoResponse, SinglePhotoType } from "@/types";
+
 export async function uploadPhoto(
   title: string,
   description: string,
@@ -17,6 +19,20 @@ export async function uploadPhoto(
 
     if (response.ok) {
       return true;
+    }
+    return false;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+export async function getPhotoData(id: string) {
+  try {
+    const response = await fetch(`/api/photos?id=${id}`, { method: "GET" });
+    const data: ApiGetPhotoResponse = await response.json();
+    if (response.ok) {
+      return data.data;
     }
     return false;
   } catch (error) {

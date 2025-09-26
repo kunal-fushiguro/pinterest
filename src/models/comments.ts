@@ -4,12 +4,12 @@ const commentsSchema = new Schema(
   {
     photoId: {
       type: Schema.Types.ObjectId,
-      ref: "photo",
+      ref: "Photo",
       required: true,
     },
     user: {
       type: Schema.Types.ObjectId,
-      ref: "users",
+      ref: "Users",
       required: true,
     },
     text: {
@@ -20,4 +20,4 @@ const commentsSchema = new Schema(
   { timestamps: true },
 );
 
-export const Comment = models.comments || model("comments", commentsSchema);
+export const Comment = models.Comment || model("Comment", commentsSchema);

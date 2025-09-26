@@ -103,14 +103,15 @@ const ProfilePage = () => {
         {/* Uploads Section */}
         {tab === data[0] &&
           user.uploads.map((val) => (
-            <Image
-              width={500}
-              height={500}
-              className="mb-4 w-full rounded-xl"
-              alt={"p" + val.title}
-              src={val.url}
-              key={val.title}
-            />
+            <Link href={`/photos/${val._id}`} key={val.title}>
+              <Image
+                width={500}
+                height={500}
+                className="mb-4 w-full rounded-xl"
+                alt={"p" + val.title}
+                src={val.url}
+              />
+            </Link>
           ))}
 
         {/* collections sections */}

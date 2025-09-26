@@ -11,9 +11,10 @@ export async function GET(request: Request) {
 
   try {
     await connectDb();
-    const findUser = await Users.findOne({ userId: userId }).populate(
-      "uploads",
-    );
+
+    const findUser = await Users.findOne({ userId }).populate([
+      { path: "uploads", strictPopulate: false },
+    ]);
 
     if (!findUser) {
       return new ApiResponse(400, "User Not Existed").send();

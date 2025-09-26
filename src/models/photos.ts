@@ -4,7 +4,7 @@ const photosSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
-      ref: "users",
+      ref: "Users",
       required: true,
     },
     url: {
@@ -22,7 +22,7 @@ const photosSchema = new Schema(
     comments: [
       {
         type: Schema.Types.ObjectId,
-        ref: "comments",
+        ref: "Comment",
       },
     ],
     tags: [
@@ -34,4 +34,4 @@ const photosSchema = new Schema(
   { timestamps: true },
 );
 
-export const Photo = models.photo || model("photo", photosSchema);
+export const Photo = models.Photo || model("Photo", photosSchema);

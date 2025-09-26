@@ -53,3 +53,10 @@ export interface SinglePhotoType {
   updatedAt: string;
   __v: number;
 }
+
+export interface ApiGetPhotoResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: SinglePhotoType;
+}

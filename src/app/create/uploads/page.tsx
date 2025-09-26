@@ -11,7 +11,7 @@ import {
 } from "@/utils/validation";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useState, DragEvent } from "react";
+import React, { useState, DragEvent, useMemo } from "react";
 
 const UploadNewPhotoPage = () => {
   const { data: session } = authClient.useSession();
@@ -41,6 +41,11 @@ const UploadNewPhotoPage = () => {
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
+
+  const previewUrl = useMemo(() => {
+    if (!file) return null;
+    return URL.createObjectURL(file);
+  }, [file]);
 
   async function handleUpload() {
     const fileValid = validateFile(file, setIsFileError, setFileError);
@@ -109,13 +114,15 @@ const UploadNewPhotoPage = () => {
             </>
           ) : (
             <div className="flex flex-col items-center gap-2">
-              <Image
-                src={URL.createObjectURL(file)}
-                alt="Preview"
-                width={300}
-                height={300}
-                className="rounded-lg object-cover shadow-md"
-              />
+              {previewUrl && (
+                <Image
+                  src={previewUrl}
+                  alt="Preview"
+                  width={300}
+                  height={300}
+                  className="rounded-lg object-cover shadow-md"
+                />
+              )}
               <p className="text-sm text-neutral-700">{file.name}</p>
               <button
                 onClick={() => setFile(null)}

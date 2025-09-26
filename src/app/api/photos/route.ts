@@ -5,6 +5,38 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { Photo } from "@/models/photos";
 
+//  get single photo
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const imageId = searchParams.get("id");
+  if (!imageId) {
+    return new ApiResponse(400, "Photo ID is required").send();
+  }
+
+  try {
+    await connectDb();
+
+    const findPhoto = await Photo.findById(imageId).populate([
+      {
+        path: "user",
+        strictPopulate: false,
+      },
+    ]);
+
+    if (!findPhoto) {
+      return new ApiResponse(400, "Photo Not Existed").send();
+    }
+
+    return new ApiResponse(200, "User Fetched Successfully", findPhoto).send();
+  } catch (e) {
+    console.error(e);
+    if (e instanceof Error) {
+      return new ApiResponse(500, e.message).send();
+    }
+  }
+}
+
+//  upload
 export async function POST(request: Request) {
   const session = await auth.api.getSession({
     headers: await headers(),
