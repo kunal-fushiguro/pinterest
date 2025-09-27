@@ -1,4 +1,4 @@
-import { ApiGetPhotoResponse } from "@/types";
+import { ApiGetPhotoResponse, ApiResponseHomePage } from "@/types";
 
 export async function uploadPhoto(
   title: string,
@@ -33,6 +33,20 @@ export async function getPhotoData(id: string) {
     const data: ApiGetPhotoResponse = await response.json();
     if (response.ok) {
       return data.data;
+    }
+    return false;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+export async function getPhotos(page: number, limit: number) {
+  try {
+    const response = await fetch(`/api/home?page=${page}&limit=${limit}`);
+    const data: ApiResponseHomePage = await response.json();
+    if (response.ok) {
+      return data.data.photos;
     }
     return false;
   } catch (error) {

@@ -60,3 +60,18 @@ export interface ApiGetPhotoResponse {
   message: string;
   data: SinglePhotoType;
 }
+
+export interface ApiResponseHomePage {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: {
+    photos: SinglePhotoType[];
+    pagination: {
+      page: number;
+      limit: number;
+      total: number;
+      totalPages: number;
+    };
+  };
+}

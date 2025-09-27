@@ -11,12 +11,7 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
 
-    const photos = await Photo.find({})
-      .populate("user")
-      .populate("comments")
-      .skip(skip)
-      .limit(limit)
-      .lean();
+    const photos = await Photo.find({}).skip(skip).limit(limit).lean();
 
     const total = await Photo.countDocuments();
 
