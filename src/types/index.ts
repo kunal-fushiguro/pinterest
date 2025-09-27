@@ -47,7 +47,7 @@ export interface SinglePhotoType {
   url: string;
   title: string;
   description: string;
-  comments: string[] | [];
+  comments: SingleCommentType[] | [];
   tags: string[] | [];
   createdAt: string;
   updatedAt: string;
@@ -74,4 +74,11 @@ export interface ApiResponseHomePage {
       totalPages: number;
     };
   };
+}
+
+export interface SingleCommentType {
+  _id: string;
+  photoId: SinglePhotoType | string;
+  user: UserPageType | string;
+  text: string;
 }
