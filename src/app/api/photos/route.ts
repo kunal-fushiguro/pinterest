@@ -15,12 +15,20 @@ export async function GET(request: Request) {
   try {
     await connectDb();
 
-    const findPhoto = await Photo.findById(imageId).populate([
-      {
-        path: "user",
+    const findPhoto = await Photo.findById(imageId)
+      .populate([
+        {
+          path: "user",
+          strictPopulate: false,
+        },
+      ])
+      .populate({
+        path: "comments",
         strictPopulate: false,
-      },
-    ]);
+        populate: {
+          path: "user",
+        },
+      });
 
     if (!findPhoto) {
       return new ApiResponse(400, "Photo Not Existed").send();

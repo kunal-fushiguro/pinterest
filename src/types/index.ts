@@ -35,7 +35,7 @@ export interface UserPageType {
   image: string;
   emailVerified: boolean;
   uploads: SinglePhotoType[];
-  collections: [];
+  collections: SinglePhotoType[];
   createdAt: string;
   updatedAt: string;
   __v: number;

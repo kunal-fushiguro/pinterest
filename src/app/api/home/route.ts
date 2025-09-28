@@ -2,6 +2,14 @@ import { connectDb } from "@/lib/db";
 import { Photo } from "@/models";
 import { ApiResponse } from "@/utils/ApiResponse";
 
+function shuffleArray<T>(array: T[]): T[] {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 export async function GET(request: Request) {
   try {
     await connectDb();
@@ -11,7 +19,9 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
 
-    const photos = await Photo.find({}).skip(skip).limit(limit).lean();
+    let photos = await Photo.find({}).skip(skip).limit(limit).lean();
+
+    photos = shuffleArray(photos);
 
     const total = await Photo.countDocuments();
 

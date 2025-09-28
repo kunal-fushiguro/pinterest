@@ -84,7 +84,7 @@ export async function PUT(request: Request) {
       { new: true },
     );
 
-    return new ApiResponse(200, "Comment Updated Successfully.");
+    return new ApiResponse(200, "Comment Updated Successfully.").send();
   } catch (error) {
     if (error instanceof Error) {
       return new ApiResponse(500, error.message).send();
@@ -121,7 +121,7 @@ export async function DELETE(request: Request) {
     await Photo.findByIdAndUpdate(findComment.photoId, {
       $pull: { comments: findComment._id },
     });
-    return new ApiResponse(200, "Comment Deleted Successfully.");
+    return new ApiResponse(200, "Comment Deleted Successfully.").send();
   } catch (error) {
     if (error instanceof Error) {
       return new ApiResponse(500, error.message).send();

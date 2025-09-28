@@ -86,10 +86,10 @@ const ProfilePage = () => {
         } ${tab === data[1] && user.collections.length > 0 && "columns-[300px]"}`}
       >
         {/* Show Create button only for the logged-in user */}
-        {session?.user.id === id && (
+        {session?.user.id === id && tab === data[0] && (
           <Link
             href={`/create/${tab.toLocaleLowerCase()}`}
-            className="flex h-32 cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-neutral-400 bg-neutral-50 p-4 text-center transition hover:border-neutral-600 hover:bg-neutral-100"
+            className="mb-4 flex h-32 cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-neutral-400 bg-neutral-50 p-4 text-center transition hover:border-neutral-600 hover:bg-neutral-100"
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-200">
               <Plus className="h-6 w-6 text-neutral-700" />
@@ -115,7 +115,18 @@ const ProfilePage = () => {
           ))}
 
         {/* collections sections */}
-
+        {tab === data[1] &&
+          user.collections.map((val) => (
+            <Link href={`/photos/${val._id}`} key={val.title}>
+              <Image
+                width={500}
+                height={500}
+                className="mb-4 w-full rounded-xl"
+                alt={"p" + val.title}
+                src={val.url}
+              />
+            </Link>
+          ))}
         {/* No Collections and Uploads */}
         {tab === data[0] && user.uploads.length <= 0 && !session && (
           <p className="mt-6 text-center text-sm text-neutral-500">

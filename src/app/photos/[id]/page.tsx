@@ -1,13 +1,18 @@
 "use client";
-import InfiniteScroll from "@/components/InfiniteScroll";
+import InfiniteScrollPhotos from "@/components/InfiniteScrollPhotos";
 import LoadingPage from "@/components/Loader";
 import { authClient } from "@/lib/auth-client";
-import { getPhotoData } from "@/services/photo";
+import {
+  addComments,
+  checkIfSaved,
+  getPhotoData,
+  toggleSavePhoto,
+} from "@/services/photo";
 import { SinglePhotoType } from "@/types";
 import { getUserInitials } from "@/utils/getUserInitials";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const SinglePhotoPage = () => {
@@ -17,17 +22,22 @@ const SinglePhotoPage = () => {
   const [commentInput, setCommentInput] = useState<string>("");
   const { data: session } = authClient.useSession();
   const [num, setNum] = useState<number>(1);
+  const router = useRouter();
+  const [isSaved, setIsSaved] = useState<boolean>(false);
 
   async function dataHandler() {
     setLoading(true);
     const data = await getPhotoData(id);
     if (data) {
       setPhoto(data);
+      const savedStatus = await checkIfSaved(data._id);
+      setIsSaved(savedStatus);
     }
     setLoading(false);
   }
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     dataHandler();
   }, []);
 
@@ -35,7 +45,13 @@ const SinglePhotoPage = () => {
     return <LoadingPage />;
   }
 
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
+    if (session === null) {
+      router.push("/auth/signin");
+
+      return;
+    }
+
     if (!commentInput.trim()) return;
     setPhoto((prev) =>
       prev
@@ -55,10 +71,24 @@ const SinglePhotoPage = () => {
     );
     setCommentInput("");
     setNum((prev) => prev + 1);
+
+    await addComments(photo?._id || "", commentInput, session?.user.id || "");
   };
 
   // handle save button click
-  async function saved() {}
+  async function saved() {
+    if (session === null) {
+      router.push("/auth/signin");
+      return;
+    }
+
+    if (!photo?._id) return;
+
+    const result = await toggleSavePhoto(photo._id);
+    if (result.success) {
+      setIsSaved(result.saved);
+    }
+  }
 
   if (!photo) {
     return (
@@ -114,12 +144,12 @@ const SinglePhotoPage = () => {
                   </div>
                 )}
               </span>
-              {/*   */}
+              {/* saved or not  */}
               <span
                 className="cursor-pointer rounded-xl bg-[#da0625] px-3 py-1 text-lg font-medium text-white"
                 onClick={saved}
               >
-                Save
+                {isSaved ? "Unsave" : "Save"}
               </span>
             </div>
             {/* other info */}
@@ -167,6 +197,8 @@ const SinglePhotoPage = () => {
                             typeof val.user === "string"
                               ? (session?.user?.image ?? "/default-avatar.png")
                               : (val.user.image ?? "/default-avatar.png");
+
+                          console.log(val);
 
                           return (
                             <div
@@ -235,7 +267,7 @@ const SinglePhotoPage = () => {
         </div>
       </div>
       <div className="mx-auto p-2 lg:w-[80%] lg:p-0">
-        <InfiniteScroll />
+        <InfiniteScrollPhotos key={"singlepagesphoto"} />
       </div>
     </>
   );

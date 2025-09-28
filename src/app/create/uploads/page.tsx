@@ -173,7 +173,7 @@ const UploadNewPhotoPage = () => {
             className="mt-4 w-full rounded-lg bg-red-500 py-3 font-semibold text-white transition hover:bg-red-600"
           >
             {loading ? (
-              <div className="h-12 w-12 animate-spin rounded-full border-4 border-red-500 border-t-transparent"></div>
+              <div className="mx-auto h-5 w-5 animate-spin rounded-full border-4 border-white border-t-transparent"></div>
             ) : (
               "Upload"
             )}

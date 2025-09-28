@@ -14,59 +14,49 @@ import React, { useState } from "react";
 
 const SignUpPage = () => {
   const router = useRouter();
-  // Input states
   const [userName, setUserName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-
-  // Error handling states
   const [isUserNameError, setIsUserNameError] = useState<boolean>(false);
   const [userNameError, setUserNameError] = useState<string>("");
-
   const [isEmailError, setIsEmailError] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<string>("");
-
   const [isPasswordError, setIsPasswordError] = useState<boolean>(false);
   const [passwordError, setPasswordError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [disable, setDisable] = useState<boolean>(false);
 
   async function signUpUser() {
+    const nameValid = validateUsername(
+      userName,
+      setIsUserNameError,
+      setUserNameError,
+    );
+    const emailValid = validateLoginEmail(
+      email,
+      setIsEmailError,
+      setEmailError,
+    );
+    const passwordValid = validateLoginPassword(
+      password,
+      setIsPasswordError,
+      setPasswordError,
+    );
+    if (!nameValid || !emailValid || !passwordValid) return;
+    setLoading(true);
+    setDisable(true);
     try {
-      const name = validateUsername(
-        userName,
-        setIsUserNameError,
-        setUserNameError,
-      );
-      const emailValid = validateLoginEmail(
-        email,
-        setIsEmailError,
-        setEmailError,
-      );
-      const passwordValid = validateLoginPassword(
-        password,
-        setIsPasswordError,
-        setPasswordError,
-      );
-
-      if (!emailValid || !passwordValid || !name) return;
       const { data, error } = await authClient.signUp.email({
         name: userName,
-        email: email,
-        password: password,
+        email,
+        password,
       });
-
-      if (error) {
-        if (error.status === 422) {
-          setIsEmailError(true);
-          setEmailError("Email is Already In Use");
-        }
-        console.error(error);
-        return;
-      }
-
-      console.log(data);
-      router.push("/");
+      if (!error) router.push("/");
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
+      setDisable(false);
     }
   }
 
@@ -115,9 +105,14 @@ const SignUpPage = () => {
           />
           <button
             onClick={signUpUser}
+            disabled={disable}
             className="w-full rounded-lg bg-red-500 py-3 font-semibold text-white transition hover:bg-red-600"
           >
-            Sign In
+            {loading ? (
+              <div className="mx-auto h-5 w-5 animate-spin rounded-full border-4 border-white border-t-transparent"></div>
+            ) : (
+              "Sign Up"
+            )}
           </button>
         </div>
         <div className="flex w-full items-center gap-2">
@@ -129,9 +124,7 @@ const SignUpPage = () => {
           className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-lg border border-neutral-300 bg-white py-2.5 transition hover:bg-neutral-50"
           onClick={async () => {
             const response = await loginWithGoogle();
-            if (response) {
-              router.push("/");
-            }
+            if (response) router.push("/");
           }}
         >
           <Image

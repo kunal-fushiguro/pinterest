@@ -37,8 +37,8 @@ export const auth = betterAuth({
             userId: newSession.user.id,
             name: newSession.user.name,
             email: newSession.user.email,
-            image: newSession.user.image,
-            emailVerified: newSession.user.emailVerified || "",
+            image: newSession.user.image || "",
+            emailVerified: newSession.user.emailVerified,
             uploads: [],
             collections: [],
           });
